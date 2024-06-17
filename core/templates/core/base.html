@@ -11,23 +11,51 @@
 <body>
     <nav class="py-6 px-6 flex justify-between items-center border-b border-gray-200">
         <a href="/" class="text-xl font-semibold">DjangoMart</a>
-        <div class="space-x-6">
-            <a href="{% url 'item:new' %}" class="text-lg font-semibold hover:text-gray-500">New Item</a>
-            <a href="{% url 'item:items' %}" class="text-lg font-semibold hover:text-gray-500">Browse</a>
-
+       
+        <div class="flex items-center space-x-6">
+            <div class="space-x-6">
+                <a href="{% url 'item:new' %}" class="text-lg font-semibold hover:text-gray-500">New Item</a>
+                <a href="{% url 'item:items' %}" class="text-lg font-semibold hover:text-gray-500">Browse</a>
+            </div>
+            
             {% if request.user.is_authenticated %}
-                <a href="{% url 'conversation:inbox' %}" class="px-6 py-3 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-700">Inbox</a>
-                <a href="{% url 'dashboard:index' %}" class="px-6 py-3 text-lg font-semibold bg-gray-500 text-white rounded-xl hover:bg-gray-700">Dashboard</a>
-                <form action="{% url 'core:logout' %}" method="post" class="inline-block">
-                    {% csrf_token %}
-                    <button type="submit" class="px-6 py-3 text-lg font-semibold bg-red-500 text-white rounded-xl hover:bg-red-700">Log out</button>
-                </form>
+            <div class="relative inline-block text-left">
+                
+                <button id="dropdownInformationButton" data-dropdown-toggle="dropdownInformation" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center" type="button">Hello, {{ request.user.username }} !<svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                </svg>
+                </button>
+                
+                <!-- Dropdown menu -->
+                <div id="dropdownInformation" class="z-10 hidden absolute right-0 mt-2 w-44 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 ">
+                    <div class="px-4 py-3 text-sm text-gray-900">
+                        <div>{{ request.user.username }}</div>
+                        <div class="font-medium truncate">{{ request.user.email }}</div>
+                    </div>
+                    <ul class="py-2 text-sm text-gray-700 " aria-labelledby="dropdownInformationButton">
+                        <li>
+                            <a href="{% url 'dashboard:index' %}" class="block px-4 py-2 hover:bg-gray-100 ">Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'conversation:inbox' %}" class="block px-4 py-2 hover:bg-gray-100 ">Inbox</a>
+                        </li>
+                    </ul>
+                    <div class="py-2">
+                        <form action="{% url 'core:logout' %}" method="post" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            {% csrf_token %}
+                            <button type="submit" class="w-full text-left">Log out</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
             {% else %}
                 <a href="{% url 'core:signup' %}" class="px-6 py-3 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:bg-teal-700">Sign up</a>
                 <a href="{% url 'core:login' %}" class="px-6 py-3 text-lg font-semibold bg-gray-500 text-white rounded-xl hover:bg-gray-700">Log in</a>
             {% endif %}
         </div>
+        
     </nav>
+    
     <div class="px-6 py-6">
         {% block content %}{% endblock %}
     </div>
@@ -48,5 +76,12 @@
             </ul>
         </div>
     </footer>
+
+    <script>
+        document.getElementById('dropdownInformationButton').addEventListener('click', function() {
+            var dropdown = document.getElementById('dropdownInformation');
+            dropdown.classList.toggle('hidden');
+        });
+    </script>
 </body>
 </html>
